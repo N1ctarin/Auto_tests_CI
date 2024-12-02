@@ -9,10 +9,10 @@ class LoginPage(BasePage):
         self.should_be_login_url()
         self.should_be_login_name()
         self.should_be_password_name()
-        self.find_input_button_in()
+        self.input_button_in_click()
         self.input_email()
         self.input_password()
-        self.shold_name_EKF()
+        self.should_name_EKF()
 
 
     def should_be_login_url(self):
