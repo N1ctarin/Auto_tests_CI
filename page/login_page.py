@@ -1,39 +1,37 @@
-from .base_page import BasePage
-from .locators import LoginPageLocators
-from .json_page import CreduForWatchdog
-import json
+from playwright.sync_api import Page
+from page.Locators import LoginPageLocator
 
+class LoginPage:
+    def __init__(self, page: Page):
+        self.page = page
 
-class LoginPage(BasePage):
-    def should_be_login_page(self):
-        self.should_be_login_url()
-        self.should_be_login_name()
-        self.should_be_password_name()
-        self.input_button_in_click()
-        self.input_email()
-        self.input_password()
-        self.should_name_EKF()
+    def open(self, link):
+        self.page.goto(link)
 
+    def enter_login(self, login: str):
+        self.page.fill(LoginPageLocator.POLE_LOGIN, login)
 
-    def should_be_login_url(self):
-        assert "auth" in self.browser.current_url
+    def enter_password(self, password: str):
+        self.page.fill(LoginPageLocator.POLE_PASSWORD, password)
 
-    def should_be_login_name(self):
-        assert self.browser.find_elements(*LoginPageLocators.LOGIN_NAME)
+    def click_login_button(self):
+        self.page.click(LoginPageLocator.LOGIN_BUTTON)
 
-    def should_be_password_name(self):
-        assert self.browser.find_elements(*LoginPageLocators.PASSWORD_NAME)
+    def enter_otp_1(self):
+        self.page.fill(LoginPageLocator.OTP_1, '0')
 
-    def input_email(self):
-        tr = self.browser.find_elements(*LoginPageLocators.LOGIN_NAME)
-        tr[0].send_keys(CreduForWatchdog.email)
+    def enter_otp_2(self):
+        self.page.focus(LoginPageLocator.OTP_2)
+        self.page.press(LoginPageLocator.OTP_2)
 
-    def input_password(self):
-        tr = self.browser.find_elements(*LoginPageLocators.PASSWORD_NAME)
-        tr[0].send_keys(*CreduForWatchdog.password)
+    def enter_otp_3(self):
+        self.page.fill(LoginPageLocator.OTP_3, "0")
 
-    def input_button_in_click(self):
-        self.browser.find_element(*LoginPageLocators.BUTTON_IN).click()
+    def enter_otp_4(self):
+        self.page.fill(LoginPageLocator.OTP_4, "0")
 
-    def should_name_EKF(self):
-        assert "EKF Connect Industry" in self.browser.find_element(*LoginPageLocators.NAME_EKF_ON_MAIN_PAGE).text
+    def is_check_success(self):
+        return self.page.is_visible(LoginPageLocator.LOCATOR_EKF)
+
+    def check_visible_selector(self, locator_check):
+        self.page.wait_for_selector(locator_check)
